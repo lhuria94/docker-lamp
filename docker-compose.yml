@@ -1,0 +1,25 @@
+# MySQL Server
+database:
+  image: mariadb:10
+  environment:
+    MYSQL_USER: drupal
+    MYSQL_PASSWORD: drupal
+    MYSQL_DATABASE: drupal
+    MYSQL_ROOT_PASSWORD: ''
+    MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+  ports:
+    - "3306:3306"
+  restart: always
+
+# PHP Web Server
+web1:
+  build: ./php56-apache
+  # Environment variables
+  ports:
+    - "80:80"
+  links:
+    - database:database
+  volumes:
+    - ..:/var/www/html
+    - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
+  restart: always
